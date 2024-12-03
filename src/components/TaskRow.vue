@@ -5,28 +5,37 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  onDeleteTask: { type: Function, required: true },
-  onEditTask: { type: Function, required: true },
   isTaskEditing: {
     type: Boolean,
     required: true,
   },
-  onSaveEditedTask: { type: Function, required: true },
-  onCloseEditedTask: { type: Function, required: true },
 })
 
+const emit = defineEmits([
+  'onChangeTaskStatus',
+  'onDeleteTask',
+  'onEditTask',
+  'onSaveEditedTask',
+  'onCloseEditedTask',
+])
+
 const editedTask = ref(props.task.name)
+const taskStatus = ref(props.task.isDone)
 </script>
 
 <template>
   <li v-if="isTaskEditing">
     <input v-model="editedTask" placeholder="edit task" />
-    <button @click="onSaveEditedTask(task.id, editedTask)">сохранить</button>
-    <button @click="onCloseEditedTask(task.id)">отмена</button>
+    <button @click="emit('onSaveEditedTask', task.id, editedTask)">сохранить</button>
+    <button @click="emit('onCloseEditedTask', task.id)">отмена</button>
   </li>
   <li v-else>
-    <p>{{ task.name }}</p>
-    <button @click="onDeleteTask(task.id)">удалить</button>
-    <button @click="onEditTask(task.id)">редактировать</button>
+    <input type="checkbox" v-model="taskStatus" @change="emit('onChangeTaskStatus', task.id)" />
+    <p v-if="taskStatus">
+      <del> {{ task.name }} </del>
+    </p>
+    <p v-else>{{ task.name }}</p>
+    <button @click="emit('onDeleteTask', task.id)">удалить</button>
+    <button @click="emit('onEditTask', task.id)">редактировать</button>
   </li>
 </template>

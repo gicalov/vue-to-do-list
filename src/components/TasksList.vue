@@ -2,17 +2,16 @@
 import { ref } from 'vue'
 import TaskRow from './TaskRow.vue'
 
-const props = defineProps({
+defineProps({
   tasks: {
     type: Object,
     required: true,
   },
-  onDeleteTask: { type: Function, required: true },
-  onSaveEditedTask: { type: Function, required: true },
 })
 
-const editError = ref(false)
+const emit = defineEmits(['onChangeTaskStatus', 'onDeleteTask', 'onSaveEditedTask'])
 
+const editError = ref(false)
 const taskEditId = ref(null)
 
 const handleSaveChanges = (taskId, newTaskName) => {
@@ -20,7 +19,7 @@ const handleSaveChanges = (taskId, newTaskName) => {
 
   if (!newTaskName.trim()) return (editError.value = true)
 
-  props.onSaveEditedTask(taskId, newTaskName)
+  emit('onSaveEditedTask', taskId, newTaskName)
   taskEditId.value = null
 }
 </script>
@@ -31,11 +30,12 @@ const handleSaveChanges = (taskId, newTaskName) => {
       v-for="task in tasks"
       :key="task.id"
       :task
-      :onDeleteTask
-      :onEditTask="(id) => (taskEditId = id)"
       :isTaskEditing="taskEditId === task.id"
-      :onSaveEditedTask="handleSaveChanges"
-      :onCloseEditedTask="() => (taskEditId = null)"
+      @onDeleteTask="(taskId) => emit('onDeleteTask', taskId)"
+      @onEditTask="(id) => (taskEditId = id)"
+      @onSaveEditedTask="handleSaveChanges"
+      @onCloseEditedTask="() => (taskEditId = null)"
+      @onChangeTaskStatus="(taskId) => emit('onChangeTaskStatus', taskId)"
     />
   </ul>
   <label v-show="editError">низя пустую строку</label>
