@@ -25,7 +25,7 @@ const handleSaveChanges = (taskId, newTaskName) => {
 </script>
 
 <template>
-  <ul>
+  <ul class="task-list">
     <TaskRow
       v-for="task in tasks"
       :key="task.id"
@@ -40,3 +40,11 @@ const handleSaveChanges = (taskId, newTaskName) => {
   </ul>
   <label v-show="editError">низя пустую строку</label>
 </template>
+
+<style scoped>
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+</style>

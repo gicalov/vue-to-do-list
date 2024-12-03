@@ -29,13 +29,32 @@ const taskStatus = ref(props.task.isDone)
     <button @click="emit('onSaveEditedTask', task.id, editedTask)">сохранить</button>
     <button @click="emit('onCloseEditedTask', task.id)">отмена</button>
   </li>
-  <li v-else>
-    <input type="checkbox" v-model="taskStatus" @change="emit('onChangeTaskStatus', task.id)" />
-    <p v-if="taskStatus">
-      <del> {{ task.name }} </del>
-    </p>
-    <p v-else>{{ task.name }}</p>
-    <button @click="emit('onDeleteTask', task.id)">удалить</button>
-    <button @click="emit('onEditTask', task.id)">редактировать</button>
+  <li v-else class="task-row__item">
+    <div class="task-row__data">
+      <input type="checkbox" v-model="taskStatus" @change="emit('onChangeTaskStatus', task.id)" />
+      <p v-if="taskStatus">
+        <del> {{ task.name }} </del>
+      </p>
+      <p v-else>{{ task.name }}</p>
+    </div>
+    <div>
+      <button @click="emit('onEditTask', task.id)">редактировать</button>
+      <button @click="emit('onDeleteTask', task.id)">удалить</button>
+    </div>
   </li>
 </template>
+
+<style scoped>
+.task-row__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid green;
+  border-radius: 8px;
+  gap: 5px;
+}
+
+.task-row__data {
+  display: flex;
+}
+</style>
