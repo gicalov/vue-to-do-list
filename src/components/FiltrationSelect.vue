@@ -1,12 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 
+import { SORT_OPTIONS } from './constants'
+
 const sortDirection = ref('increasing')
 const emit = defineEmits(['onChangeDirection'])
-const SORT_OPTIONS = [
-  { direction: 'increasing', label: 'По возрастанию', id: 1 },
-  { direction: 'decreasing', label: 'По убыванию', id: 2 },
-]
 </script>
 
 <template>
