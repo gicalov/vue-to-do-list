@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 import FormTask from './components/FormTask.vue'
 import TasksList from './components/TasksList.vue'
+import FiltrationSelect from './components/FiltrationSelect.vue'
+
 const tasks = ref([])
 const errors = ref({ addTask: false })
 const sortDirection = ref('increasing')
@@ -38,7 +40,9 @@ const handleDeleteTask = (taskId) => {
 
 const handleSaveEditedTask = (taskId, newTaskName) => {
   tasks.value = tasks.value.map((task) => {
-    if (task.id === taskId) return { ...task, name: newTaskName }
+    if (task.id === taskId) {
+      return { ...task, name: newTaskName }
+    }
 
     return task
   })
@@ -56,35 +60,45 @@ const handleChangeTaskStatus = (taskId) => {
   saveTasks()
 }
 
+const handleChangeDirection = (newDirection) => {
+  sortDirection.value = newDirection
+}
+
 const sortedTasks = computed(() => {
-  return tasks.value.slice().sort((elem, nextElem) => {
+  return [...tasks.value].sort((a, b) => {
     return sortDirection.value === 'increasing'
-      ? elem.name.localeCompare(nextElem.name)
-      : nextElem.name.localeCompare(elem.name)
+      ? a.name.localeCompare(b.name)
+      : b.name.localeCompare(a.name)
   })
 })
 </script>
 
 <template>
   <main>
-    <div class="details">
-      <FormTask @add-task="addTask" />
+    <div class="app-wrapper">
+      <div class="details">
+        <FormTask @add-task="addTask" />
+      </div>
+      <label v-show="errors.addTask">ошибся, но где</label>
+      <TasksList
+        :sortedTasks
+        @onDeleteTask="handleDeleteTask"
+        @onSaveEditedTask="handleSaveEditedTask"
+        @onChangeTaskStatus="handleChangeTaskStatus"
+      />
+      <FiltrationSelect @onChangeDirection="handleChangeDirection" />
     </div>
-    <label v-show="errors.addTask">ошибся, но где</label>
-    <TasksList
-      :sortedTasks
-      @onDeleteTask="handleDeleteTask"
-      @onSaveEditedTask="handleSaveEditedTask"
-      @onChangeTaskStatus="handleChangeTaskStatus"
-    />
-    <select v-model="sortDirection">
-      <option value="increasing">По возрастанию</option>
-      <option value="decreasing">По убыванию</option>
-    </select>
   </main>
 </template>
 
 <style scoped>
+.app-wrapper {
+  max-width: 200px;
+  max-height: 400px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0 auto;
+}
 .details {
   display: flex;
   flex-direction: column;

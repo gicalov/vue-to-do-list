@@ -42,15 +42,16 @@ const taskStatus = ref(props.task.isDone)
       </p>
       <p v-else>{{ task.name }}</p>
     </div>
-    <div>
-      <button @click="emit('onEditTask', task.id)">редактировать</button>
-      <button @click="emit('onDeleteTask', task.id)">удалить</button>
+    <div class="task-row__control-buttons">
+      <button @click="emit('onEditTask', task.id)">ред</button>
+      <button @click="emit('onDeleteTask', task.id)">del</button>
     </div>
   </li>
 </template>
 
 <style lang="scss" scoped>
 .task-row {
+  font-size: 20px;
   &__item {
     display: flex;
     justify-content: space-between;
@@ -58,6 +59,11 @@ const taskStatus = ref(props.task.isDone)
     border: 1px solid green;
     border-radius: 8px;
     gap: 5px;
+    font-size: 10px;
+    word-wrap: break-word;
+
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   &__data {
@@ -67,6 +73,12 @@ const taskStatus = ref(props.task.isDone)
       width: 30px;
       border-radius: 20px;
     }
+  }
+
+  &__control-buttons {
+    display: flex;
+    flex-direction: column;
+    min-width: 40px;
   }
 }
 </style>

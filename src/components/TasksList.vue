@@ -48,5 +48,9 @@ const handleSaveChanges = (taskId, newTaskName) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-height: 270px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0;
 }
 </style>
