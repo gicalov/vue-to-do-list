@@ -31,7 +31,12 @@ const taskStatus = ref(props.task.isDone)
   </li>
   <li v-else class="task-row__item">
     <div class="task-row__data">
-      <input type="checkbox" v-model="taskStatus" @change="emit('onChangeTaskStatus', task.id)" />
+      <input
+        class="checkbox"
+        type="checkbox"
+        v-model="taskStatus"
+        @change="emit('onChangeTaskStatus', task.id)"
+      />
       <p v-if="taskStatus">
         <del> {{ task.name }} </del>
       </p>
@@ -56,5 +61,10 @@ const taskStatus = ref(props.task.isDone)
 
 .task-row__data {
   display: flex;
+}
+
+.checkbox {
+  width: 30px;
+  border-radius: 20px;
 }
 </style>
