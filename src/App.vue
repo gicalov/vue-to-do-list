@@ -1,38 +1,39 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import FormTask from './components/FormTask.vue'
 import TasksList from './components/TasksList.vue'
 const tasks = ref([])
 const errors = ref({ addTask: false })
+const sortDirection = ref('increasing')
 
-tasks.value = JSON.parse(localStorage.getItem('tasks')) || [
-  { id: 1, name: 'замоканная задача 1', isDone: false },
-  { id: 2, name: 'замоканная задача 2', isDone: true },
-]
+tasks.value = JSON.parse(localStorage.getItem('tasks')) || []
+
+const saveTasks = () => {
+  localStorage.setItem('tasks', JSON.stringify(tasks.value))
+}
 
 const addTask = (newTask) => {
   errors.value.addTask = false
 
   if (!newTask.trim()) {
     errors.value.addTask = true
+
     return
   }
 
   tasks.value.push({
-    id: tasks.value.length
-      ? tasks.value.reduce((acc, el) => (acc < el.id ? (acc = el.id) : null), 0) + 1
-      : 0,
+    id: Date.now(),
     name: newTask,
     isDone: false,
   })
 
-  localStorage.setItem('tasks', JSON.stringify(tasks.value))
+  saveTasks()
 }
 
 const handleDeleteTask = (taskId) => {
   tasks.value = tasks.value.filter((task) => task.id !== taskId)
 
-  localStorage.setItem('tasks', JSON.stringify(tasks.value))
+  saveTasks()
 }
 
 const handleSaveEditedTask = (taskId, newTaskName) => {
@@ -42,7 +43,7 @@ const handleSaveEditedTask = (taskId, newTaskName) => {
     return task
   })
 
-  localStorage.setItem('tasks', JSON.stringify(tasks.value))
+  saveTasks()
 }
 
 const handleChangeTaskStatus = (taskId) => {
@@ -52,18 +53,16 @@ const handleChangeTaskStatus = (taskId) => {
     return task
   })
 
-  localStorage.setItem('tasks', JSON.stringify(tasks.value))
+  saveTasks()
 }
 
-const handleSort = (direction) => {
-  if (direction === 'increasing') {
-    tasks.value = tasks.value.sort((elem, nextElem) => elem.name.localeCompare(nextElem.name))
-  } else {
-    tasks.value = tasks.value.sort((elem, nextElem) => nextElem.name.localeCompare(elem.name))
-  }
-
-  localStorage.setItem('tasks', JSON.stringify(tasks.value))
-}
+const sortedTasks = computed(() => {
+  return tasks.value.slice().sort((elem, nextElem) => {
+    return sortDirection.value === 'increasing'
+      ? elem.name.localeCompare(nextElem.name)
+      : nextElem.name.localeCompare(elem.name)
+  })
+})
 </script>
 
 <template>
@@ -73,13 +72,15 @@ const handleSort = (direction) => {
     </div>
     <label v-show="errors.addTask">ошибся, но где</label>
     <TasksList
-      :tasks
+      :sortedTasks
       @onDeleteTask="handleDeleteTask"
       @onSaveEditedTask="handleSaveEditedTask"
       @onChangeTaskStatus="handleChangeTaskStatus"
     />
-    <button @click="handleSort('increasing')">сортировать возрастание</button>
-    <button @click="handleSort('decreasing')">сортировать убывание</button>
+    <select v-model="sortDirection">
+      <option value="increasing">По возрастанию</option>
+      <option value="decreasing">По убыванию</option>
+    </select>
   </main>
 </template>
 

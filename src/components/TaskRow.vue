@@ -49,22 +49,24 @@ const taskStatus = ref(props.task.isDone)
   </li>
 </template>
 
-<style scoped>
-.task-row__item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid green;
-  border-radius: 8px;
-  gap: 5px;
-}
+<style lang="scss" scoped>
+.task-row {
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid green;
+    border-radius: 8px;
+    gap: 5px;
+  }
 
-.task-row__data {
-  display: flex;
-}
+  &__data {
+    display: flex;
 
-.checkbox {
-  width: 30px;
-  border-radius: 20px;
+    .checkbox {
+      width: 30px;
+      border-radius: 20px;
+    }
+  }
 }
 </style>

@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import TaskRow from './TaskRow.vue'
 
 defineProps({
-  tasks: {
+  sortedTasks: {
     type: Object,
     required: true,
   },
@@ -17,7 +17,9 @@ const taskEditId = ref(null)
 const handleSaveChanges = (taskId, newTaskName) => {
   editError.value = false
 
-  if (!newTaskName.trim()) return (editError.value = true)
+  if (!newTaskName.trim()) {
+    return (editError.value = true)
+  }
 
   emit('onSaveEditedTask', taskId, newTaskName)
   taskEditId.value = null
@@ -27,7 +29,7 @@ const handleSaveChanges = (taskId, newTaskName) => {
 <template>
   <ul class="task-list">
     <TaskRow
-      v-for="task in tasks"
+      v-for="task in sortedTasks"
       :key="task.id"
       :task
       :isTaskEditing="taskEditId === task.id"

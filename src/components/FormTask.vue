@@ -17,5 +17,3 @@ const addTask = () => {
   <input v-model="newTask" placeholder="new task" ref="inputField" />
   <button @click="addTask">Add Task</button>
 </template>
-
-<style scoped></style>
