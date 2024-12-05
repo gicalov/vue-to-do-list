@@ -4,7 +4,7 @@ import TaskRow from './TaskRow.vue'
 
 defineProps({
   sortedTasks: {
-    type: Object,
+    type: Array,
     required: true,
   },
 })
@@ -48,7 +48,7 @@ const handleSaveChanges = (taskId, newTaskName) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 270px;
+  max-height: 260px;
   overflow-x: hidden;
   overflow-y: auto;
   padding: 0;

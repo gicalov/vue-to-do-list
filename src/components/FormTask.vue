@@ -14,6 +14,6 @@ const addTask = () => {
 </script>
 
 <template>
-  <input v-model="newTask" placeholder="new task" ref="inputField" />
+  <input v-model="newTask" placeholder="New task" ref="inputField" />
   <button @click="addTask">Add Task</button>
 </template>

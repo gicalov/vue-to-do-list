@@ -1,5 +1,10 @@
 <script setup>
 import { ref } from 'vue'
+
+import EditIcon from '@/assets/edit-icon.png'
+
+import CloseIcon from '@/assets/close-icon.png'
+
 const props = defineProps({
   task: {
     type: Object,
@@ -43,13 +48,27 @@ const taskStatus = ref(props.task.isDone)
       <p v-else>{{ task.name }}</p>
     </div>
     <div class="task-row__control-buttons">
-      <button @click="emit('onEditTask', task.id)">ред</button>
-      <button @click="emit('onDeleteTask', task.id)">del</button>
+      <button @click="emit('onEditTask', task.id)" class="edit-button">
+        <img :src="EditIcon" alt="icon" class="edit-icon" />
+      </button>
+      <button @click="emit('onDeleteTask', task.id)" class="edit-button">
+        <img :src="CloseIcon" alt="icon" class="edit-icon" />
+      </button>
     </div>
   </li>
 </template>
 
 <style lang="scss" scoped>
+.edit-button {
+  border: none; /* Убираем стандартный стиль кнопки */
+  background-color: transparent; /* Сделать фоновый цвет прозрачным */
+  cursor: pointer; /* Изменяем курсор при наведении */
+}
+
+.edit-icon {
+  width: 24px; /* Ширина иконки */
+  height: 24px; /* Высота иконки */
+}
 .task-row {
   font-size: 20px;
   &__item {
