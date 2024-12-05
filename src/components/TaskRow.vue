@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 
 import EditIcon from '@/assets/edit-icon.png'
-
 import CloseIcon from '@/assets/close-icon.png'
 
 const props = defineProps({
@@ -16,23 +15,31 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits([
-  'onChangeTaskStatus',
-  'onDeleteTask',
-  'onEditTask',
-  'onSaveEditedTask',
-  'onCloseEditedTask',
-])
-
 const editedTask = ref(props.task.name)
 const taskStatus = ref(props.task.isDone)
+
+const emit = defineEmits([
+  'change-task-status',
+  'delete-task',
+  'edit-task',
+  'save-edited-task',
+  'close-edited-task',
+])
+
+const handleSaveTask = () => {
+  emit('save-edited-task', props.task.id, editedTask)
+}
+
+const handleTaskAction = (action) => {
+  emit(action, props.task.id)
+}
 </script>
 
 <template>
   <li v-if="isTaskEditing">
     <input v-model="editedTask" placeholder="edit task" />
-    <button @click="emit('onSaveEditedTask', task.id, editedTask)">сохранить</button>
-    <button @click="emit('onCloseEditedTask', task.id)">отмена</button>
+    <button @click="handleSaveTask">сохранить</button>
+    <button @click="handleTaskAction('close-edited-task')">отмена</button>
   </li>
   <li v-else class="task-row__item">
     <div class="task-row__data">
@@ -40,7 +47,7 @@ const taskStatus = ref(props.task.isDone)
         class="checkbox"
         type="checkbox"
         v-model="taskStatus"
-        @change="emit('onChangeTaskStatus', task.id)"
+        @change="handleTaskAction('change-task-status')"
       />
       <p v-if="taskStatus">
         <del> {{ task.name }} </del>
@@ -48,10 +55,10 @@ const taskStatus = ref(props.task.isDone)
       <p v-else>{{ task.name }}</p>
     </div>
     <div class="task-row__control-buttons">
-      <button @click="emit('onEditTask', task.id)" class="edit-button">
+      <button @click="handleTaskAction('edit-task')" class="edit-button">
         <img :src="EditIcon" alt="icon" class="edit-icon" />
       </button>
-      <button @click="emit('onDeleteTask', task.id)" class="edit-button">
+      <button @click="handleTaskAction('delete-task')" class="edit-button">
         <img :src="CloseIcon" alt="icon" class="edit-icon" />
       </button>
     </div>
@@ -60,17 +67,18 @@ const taskStatus = ref(props.task.isDone)
 
 <style lang="scss" scoped>
 .edit-button {
-  border: none; /* Убираем стандартный стиль кнопки */
-  background-color: transparent; /* Сделать фоновый цвет прозрачным */
-  cursor: pointer; /* Изменяем курсор при наведении */
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 .edit-icon {
-  width: 24px; /* Ширина иконки */
-  height: 24px; /* Высота иконки */
+  width: 24px;
+  height: 24px;
 }
 .task-row {
   font-size: 20px;
+
   &__item {
     display: flex;
     justify-content: space-between;
@@ -79,8 +87,6 @@ const taskStatus = ref(props.task.isDone)
     border-radius: 8px;
     gap: 5px;
     font-size: 10px;
-    word-wrap: break-word;
-
     word-break: break-word;
     overflow-wrap: break-word;
   }

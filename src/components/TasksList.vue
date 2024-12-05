@@ -1,46 +1,82 @@
 <script setup>
-import { ref } from 'vue'
-import TaskRow from './TaskRow.vue'
+import { ref, computed } from 'vue'
+import TaskRow from '@/components/TaskRow.vue'
+import PaginationPages from '@/components/PaginationPages.vue'
 
-defineProps({
+const props = defineProps({
   sortedTasks: {
     type: Array,
     required: true,
   },
 })
 
-const emit = defineEmits(['onChangeTaskStatus', 'onDeleteTask', 'onSaveEditedTask'])
+const emit = defineEmits(['change-task-status', 'delete-task', 'save-edited-task'])
 
 const editError = ref(false)
 const taskEditId = ref(null)
 
+const currentPage = ref(1)
+const itemsPerPage = 3
+
+const paginatedTasks = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return props.sortedTasks.slice(start, end)
+})
+
 const handleSaveChanges = (taskId, newTaskName) => {
   editError.value = false
 
-  if (!newTaskName.trim()) {
+  if (!newTaskName.value.trim()) {
     return (editError.value = true)
   }
 
-  emit('onSaveEditedTask', taskId, newTaskName)
+  emit('save-edited-task', taskId, newTaskName.value)
   taskEditId.value = null
 }
+
+const totalPages = computed(() => Math.ceil(props.sortedTasks.length / itemsPerPage))
+
+const changePage = (page) => {
+  if (page < 1 || page > totalPages.value) return
+  currentPage.value = page
+}
+
+const handleDeleteTask = (taskId) => {
+  emit('delete-task', taskId)
+  if (
+    currentPage.value === totalPages.value &&
+    props.sortedTasks.length % itemsPerPage === 1 &&
+    currentPage.value !== 1
+  ) {
+    currentPage.value = currentPage.value - 1
+  }
+}
+
+const handleCloseEditedTask = () => {
+  taskEditId.value = null
+  editError.value = false
+}
+
+const handleChangeTaskStatus = (taskId) => emit('change-task-status', taskId)
 </script>
 
 <template>
   <ul class="task-list">
     <TaskRow
-      v-for="task in sortedTasks"
+      v-for="task in paginatedTasks"
       :key="task.id"
       :task
       :isTaskEditing="taskEditId === task.id"
-      @onDeleteTask="(taskId) => emit('onDeleteTask', taskId)"
-      @onEditTask="(id) => (taskEditId = id)"
-      @onSaveEditedTask="handleSaveChanges"
-      @onCloseEditedTask="() => (taskEditId = null)"
-      @onChangeTaskStatus="(taskId) => emit('onChangeTaskStatus', taskId)"
+      @delete-task="handleDeleteTask"
+      @edit-task="(id) => (taskEditId = id)"
+      @save-edited-task="handleSaveChanges"
+      @close-edited-task="handleCloseEditedTask"
+      @change-task-status="handleChangeTaskStatus"
     />
   </ul>
-  <label v-show="editError">низя пустую строку</label>
+  <label v-show="editError">incorrect edit field</label>
+  <PaginationPages :totalPages :currentPage @change-page="changePage" />
 </template>
 
 <style scoped>
