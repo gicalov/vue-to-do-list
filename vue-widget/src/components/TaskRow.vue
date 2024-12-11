@@ -70,6 +70,8 @@ const handleTaskAction = (action) => {
   border: none;
   background-color: transparent;
   cursor: pointer;
+  max-width: 40px;
+  max-height: 30px;
 }
 
 .edit-icon {
@@ -89,6 +91,7 @@ const handleTaskAction = (action) => {
     font-size: 10px;
     word-break: break-word;
     overflow-wrap: break-word;
+    background-color: red;
   }
 
   &__data {
