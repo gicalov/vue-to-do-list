@@ -11,4 +11,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    lib: {
+      entry: 'src/main.js',
+      name: 'MyWidget',
+      fileName: (format) => `my-widget.${format}.js`,
+    },
+    css: {
+      extract: true,
+    },
+  },
 })

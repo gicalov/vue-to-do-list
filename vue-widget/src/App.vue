@@ -52,7 +52,6 @@ const sortedTasks = computed(() => {
 <style scoped>
 .app-wrapper {
   max-width: 200px;
-  max-height: 400px;
   overflow-x: hidden;
   overflow-y: auto;
   margin: 0 auto;

@@ -70,6 +70,8 @@ const handleTaskAction = (action) => {
   border: none;
   background-color: transparent;
   cursor: pointer;
+  max-width: 40px;
+  max-height: 30px;
 }
 
 .edit-icon {
