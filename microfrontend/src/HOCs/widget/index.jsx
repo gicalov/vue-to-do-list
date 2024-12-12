@@ -15,6 +15,7 @@ const withDraggableResizable = (WrappedComponent) => {
     };
 
     handleMouseDown = (e) => {
+      if (e.button !== 0) return;
       if (e.target.className.includes("resizer")) {
         this.setState({
           isResizing: true,
