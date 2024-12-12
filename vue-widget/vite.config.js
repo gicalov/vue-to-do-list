@@ -17,5 +17,8 @@ export default defineConfig({
       name: 'MyWidget',
       fileName: (format) => `my-widget.${format}.js`,
     },
+    css: {
+      extract: true,
+    },
   },
 })

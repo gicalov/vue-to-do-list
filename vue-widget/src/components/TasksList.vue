@@ -62,6 +62,7 @@ const handleChangeTaskStatus = (taskId) => emit('change-task-status', taskId)
 </script>
 
 <template>
+  <PaginationPages :totalPages :currentPage @change-page="changePage" />
   <ul class="task-list">
     <TaskRow
       v-for="task in paginatedTasks"
@@ -76,7 +77,6 @@ const handleChangeTaskStatus = (taskId) => emit('change-task-status', taskId)
     />
   </ul>
   <label v-show="editError">incorrect edit field</label>
-  <PaginationPages :totalPages :currentPage @change-page="changePage" />
 </template>
 
 <style scoped>
@@ -84,9 +84,6 @@ const handleChangeTaskStatus = (taskId) => emit('change-task-status', taskId)
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 260px;
-  overflow-x: hidden;
-  overflow-y: auto;
   padding: 0;
 }
 </style>

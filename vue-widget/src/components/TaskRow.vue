@@ -91,7 +91,6 @@ const handleTaskAction = (action) => {
     font-size: 10px;
     word-break: break-word;
     overflow-wrap: break-word;
-    background-color: red;
   }
 
   &__data {

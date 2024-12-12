@@ -38,4 +38,8 @@ const handleChangePage = (newPage) => {
   align-items: center;
   flex-wrap: wrap;
 }
+.pagination-pages button {
+  padding: 0 3px;
+  margin-top: 10px;
+}
 </style>
