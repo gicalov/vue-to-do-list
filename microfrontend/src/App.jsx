@@ -8,6 +8,7 @@ import { styles } from "./constants";
 
 const App = () => {
   const { isShowWidget } = useStore();
+
   return (
     <div style={styles.container}>
       <Header />
@@ -18,6 +19,7 @@ const App = () => {
           Это простая страница, созданная с использованием React. Вы можете
           использовать её как основную точку для разработки вашего приложения.
         </p>
+        <input />
       </div>
     </div>
   );
