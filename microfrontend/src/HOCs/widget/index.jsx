@@ -1,118 +1,100 @@
-import React from "react";
+import { useState } from "react";
+
 import "./style.css";
 
-const withDraggableResizable = (WrappedComponent) => {
-  class DraggableResizable extends React.Component {
-    state = {
-      isDragging: false,
-      isResizing: false,
-      startX: 0,
-      startY: 0,
-      width: 250,
-      height: 500,
-      left: 400,
-      top: 400,
-    };
+import { initState, widgetStyles } from "./constants";
 
-    handleMouseDown = (e) => {
-      if (e.button !== 0) return;
-      if (e.target.className.includes("resizer")) {
-        this.setState({
-          isResizing: true,
-          startX: e.clientX,
-          startY: e.clientY,
-        });
-      } else {
-        this.setState({
-          isDragging: true,
-          startX: e.clientX,
-          startY: e.clientY,
-        });
-      }
+const DraggableResizable = ({ children, onClose }) => {
+  const [data, setData] = useState(initState);
 
-      document.addEventListener("mousemove", this.handleMouseMove);
-      document.addEventListener("mouseup", this.handleMouseUp);
-      document.body.style.userSelect = "none";
-    };
+  const handleMouseDown = (e) => {
+    if (e.button !== 0) return;
+    if (e.target.className.includes("resizer")) {
+      setData((prevData) => ({
+        ...prevData,
+        isResizing: true,
+        startX: e.clientX,
+        startY: e.clientY,
+      }));
+    } else {
+      setData((prevData) => ({
+        ...prevData,
+        isDragging: true,
+        startX: e.clientX,
+        startY: e.clientY,
+      }));
+    }
 
-    handleMouseMove = (e) => {
-      const { isDragging, isResizing, width, height, left, top } = this.state;
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    document.body.style.userSelect = "none";
+  };
+
+  const handleMouseMove = (e) => {
+    setData((prevData) => {
+      const {
+        isDragging,
+        isResizing,
+        width,
+        height,
+        left,
+        top,
+        startX,
+        startY,
+      } = prevData;
 
       if (isDragging) {
-        this.setState({
-          left: left + (e.clientX - this.state.startX),
-          top: top + (e.clientY - this.state.startY),
+        return {
+          ...prevData,
+          left: left + (e.clientX - startX),
+          top: top + (e.clientY - startY),
           startX: e.clientX,
           startY: e.clientY,
-        });
+        };
       } else if (isResizing) {
-        this.setState({
-          width: width + (e.clientX - this.state.startX),
-          height: height + (e.clientY - this.state.startY),
+        return {
+          ...prevData,
+          width: width + (e.clientX - startX),
+          height: height + (e.clientY - startY),
           startX: e.clientX,
           startY: e.clientY,
-        });
+        };
       }
-    };
 
-    handleMouseUp = () => {
-      this.setState({ isDragging: false, isResizing: false });
-      document.removeEventListener("mousemove", this.handleMouseMove);
-      document.removeEventListener("mouseup", this.handleMouseUp);
-      document.body.style.userSelect = "auto";
-    };
+      return prevData;
+    });
+  };
 
-    render() {
-      const { left, top, width, height } = this.state;
+  const handleMouseUp = () => {
+    setData((prevData) => ({
+      ...prevData,
+      isDragging: false,
+      isResizing: false,
+    }));
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+    document.body.style.userSelect = "auto";
+  };
 
-      const styles = {
-        position: "absolute",
-        left: `${left}px`,
-        top: `${top}px`,
-        width: `${width}px`,
-        height: `${height}px`,
-        overflow: "hidden",
-        zIndex: 1000,
-      };
+  const wrapperStyles = {
+    position: "absolute",
+    left: `${data.left}px`,
+    top: `${data.top}px`,
+    width: `${data.width}px`,
+    height: `${data.height}px`,
+    overflow: "hidden",
+    zIndex: 1000,
+  };
 
-      return (
-        <div style={styles} onMouseDown={this.handleMouseDown}>
-          <div
-            style={{
-              width: "20px",
-              height: "20px",
-              position: "absolute",
-              border: "1px solid green",
-              cursor: "pointer",
-              backgroundColor: "white",
-              borderRadius: "100px",
-              top: "0",
-              right: "0",
-            }}
-            onClick={this.props.onClose}
-          />
-          <WrappedComponent {...this.props} />
-          <div
-            className="resizer"
-            style={{
-              width: "10px",
-              height: "10px",
-              background: "blue",
-              position: "absolute",
-              bottom: "0",
-              right: "0",
-              cursor: "nwse-resize",
-              pointerEvents: "all",
-            }}
-          />
-        </div>
-      );
-    }
-  }
-
-  return DraggableResizable;
+  return (
+    <div style={wrapperStyles} onMouseDown={handleMouseDown}>
+      <div style={widgetStyles.container} onClick={onClose}>
+        <img src="images/close-icon.png" alt="Close" style={widgetStyles.img} />
+      </div>
+      <div className="wrapper">{children}</div>
+      <div className="resizer" style={widgetStyles.resizer} />
+    </div>
+  );
 };
 
-const Drugs = (props) => <div className="wrapper">{props.children}</div>;
-
-export default withDraggableResizable(Drugs);
+export default DraggableResizable;

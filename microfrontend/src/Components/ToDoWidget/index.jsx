@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Rnd } from "react-rnd";
 import { mount, unmount } from "../../../../vue-widget/dist/my-widget.es";
-import Drugs from "../../HOCs/widget";
+import DraggableResizable from "../../HOCs/widget";
 import useStore from "../../store";
 
 const ToDoWidget = () => {
@@ -23,9 +22,9 @@ const ToDoWidget = () => {
   }, []);
 
   return (
-    <Drugs onClose={toggleWidget}>
+    <DraggableResizable onClose={toggleWidget}>
       <div ref={componentRef} />
-    </Drugs>
+    </DraggableResizable>
   );
 };
 
