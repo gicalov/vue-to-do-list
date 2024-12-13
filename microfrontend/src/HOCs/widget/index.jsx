@@ -1,22 +1,33 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import "./style.css";
 
 import { initState, widgetStyles } from "./constants";
 
+export const EVENTS_TYPES= {
+  gragg: 'dragg'
+  resize,
+
+
+}
+
 const DraggableResizable = ({ children, onClose }) => {
   const [data, setData] = useState(initState);
+  const ref= useRef(null)
 
   const handleMouseDown = (e) => {
-    if (e.button !== 0) return;
-    if (e.target.className.includes("resizer")) {
+    if (e.button !== 0) {return;
+
+
+    }
+    if (ref.current?.contains(e.target)) {
       setData((prevData) => ({
         ...prevData,
         isResizing: true,
         startX: e.clientX,
         startY: e.clientY,
       }));
-    } else {
+    }  {
       setData((prevData) => ({
         ...prevData,
         isDragging: true,
@@ -33,8 +44,10 @@ const DraggableResizable = ({ children, onClose }) => {
   const handleMouseMove = (e) => {
     setData((prevData) => {
       const {
-        isDragging,
-        isResizing,
+        // isDragging,
+        // isResizing,
+        // isFloating,
+        // isStattic,
         width,
         height,
         left,
@@ -42,6 +55,8 @@ const DraggableResizable = ({ children, onClose }) => {
         startX,
         startY,
       } = prevData;
+
+
 
       if (isDragging) {
         return {
@@ -59,6 +74,10 @@ const DraggableResizable = ({ children, onClose }) => {
           startX: e.clientX,
           startY: e.clientY,
         };
+      } esle if (condition) {
+        
+      } else if (condition) {
+        
       }
 
       return prevData;
@@ -92,7 +111,7 @@ const DraggableResizable = ({ children, onClose }) => {
         <img src="images/close-icon.png" alt="Close" style={widgetStyles.img} />
       </div>
       <div className="wrapper">{children}</div>
-      <div className="resizer" style={widgetStyles.resizer} />
+      <div className="resizer" ref={ref} style={widgetStyles.resizer} />
     </div>
   );
 };
