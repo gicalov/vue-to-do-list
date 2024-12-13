@@ -4,7 +4,7 @@ import { SORT_OPTIONS } from '@/constants'
 
 export const useTasksStore = defineStore('tasks', {
   state: () => ({
-    tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+    tasks: [],
     errors: {
       addTask: false,
     },
@@ -12,6 +12,9 @@ export const useTasksStore = defineStore('tasks', {
   }),
 
   actions: {
+    setTasks(taskList) {
+      this.tasks = taskList
+    },
     saveTasks() {
       localStorage.setItem('tasks', JSON.stringify(this.tasks))
     },

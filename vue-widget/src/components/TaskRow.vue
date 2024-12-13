@@ -72,6 +72,9 @@ const handleTaskAction = (action) => {
   cursor: pointer;
   max-width: 40px;
   max-height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .edit-icon {
