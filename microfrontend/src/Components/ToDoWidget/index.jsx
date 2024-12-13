@@ -13,7 +13,9 @@ const ToDoWidget = () => {
     const currentElement = componentRef.current;
     currentElement.appendChild(container);
 
-    mount(container);
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+    mount(container, { tasks });
 
     return () => {
       unmount(container);
