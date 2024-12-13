@@ -6,16 +6,26 @@ import TasksList from '@/components/TasksList.vue'
 import SortingSelect from '@/components/SortingSelect.vue'
 import { SORT_OPTIONS } from '@/constants'
 
+const props = defineProps({
+  tasks: {
+    type: Array,
+    required: true,
+  },
+})
+
 const tasksStore = useTasksStore()
 
 const {
   errors,
+  setTasks,
   addTask,
   handleDeleteTask,
   handleSaveEditedTask,
   handleChangeTaskStatus,
   handleChangeDirection,
 } = tasksStore
+
+setTasks(props.tasks)
 
 const sortedTasks = computed(() => {
   if (tasksStore.sortDirection === SORT_OPTIONS) {
